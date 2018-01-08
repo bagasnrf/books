@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pragprog Books Online Store</title>
+<%= stylesheet_link_tag "application", media: "all",
+"data-turbolinks-track" => 'reload' %>
+<%= javascript_include_tag "application", "data-turbolinks-track" => 'reload' %>
+<%= csrf_meta_tags %>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body class="<%= controller.controller_name %>">
+<div class="container">
+<header class="header">
+<a href="/"><%= image_tag 'logo.svg', alt: 'The Pragmatic Bookshelf' %></a>
+</header>
+
+<nav class="navbar navbar-default">
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+			<li><a href="/"><i class="fa fa-home"></i> <%= t('.home') %> <span class="sr-only">(current)</span></a></li>
+			<li><a href="/pages/faq"><i class="fa fa-question-circle-o"></i> <%= t('.questions') %></a></li>
+			<li><a href="/pages/news"><i class="fa fa-newspaper-o"></i> <%= t('.news') %></a></li>
+			<li><a href="/pages/contact"><i class="fa fa-envelope-o"></i> <%= t('.contact') %></a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+
+      <% if session[:user_id] %>
+
+<li><%= link_to 'Orders', orders_path %></li>
+<li><%= link_to 'Products', products_path %></li>
+<li><%= link_to 'Users', users_path %></li>
+<li><%= link_to 'Logout', logout_path, method: :delete %></li>
+<% else %>
+<li><a href="/login"><i class="fa fa-user-circle"></i> Login</a></li>
+<% end %>
+
+ </ul>
+    </div><!-- /.navbar-collapse -->
+
+</nav>
+
+<% if @cart %>
+<%= hidden_div_if(@cart.line_items.empty?, id: 'cart') do %>
+<%= render @cart %>
+<% end %>
+<% end %>
+
+<%= yield %>
+
+
+      <footer class="footer">
+        <p>&copy; 2018 Informatic Eng., Inc.</p>
+        <%= form_tag store_index_path, class: 'locale' do %>
+	<%= select_tag 'set_locale',
+	options_for_select(LANGUAGES, I18n.locale.to_s),
+	onchange: 'this.form.submit()' %>
+	<%= submit_tag 'submit' %>
+	<%= javascript_tag "$('.locale input').hide()" %>
+	<% end %>
+      </footer>
+</div>
+</body>
+</html>
